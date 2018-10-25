@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="UTF-8">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue实例</title>
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <p>{{foo}}</p>
+    </div>
+    <script>
+        var obj = {
+                foo: 'bar'
+            }
+            //Object.freeze(obj) 这句就设定了obj的内容不能被改变
+        var vm = new Vue({
+            el: "#app",
+            data: obj,
+            created: function() {
+                console.log('foo is:' + this.foo);
+            }
+        })
+        console.log(vm.$el);
+        console.log(vm.$data === obj);
+        vm.$watch('foo', function(newValue, oldValue) {
+            console.log('foo的值从' + oldValue + '改变为' + newValue)
+        })
+    </script>
+</body>
+
+</html>
