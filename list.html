@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="UTF-8">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>列表渲染</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <ul id="example-1">
+        <li v-for="item in items">
+            {{item.message}}
+        </li>
+    </ul>
+    <ul id="example-2">
+        <li v-for="(item,index) of items">
+            {{parentMessage}}-{{index}}-{{item.message}}
+        </li>
+    </ul>
+    <ul id="v-for-object">
+        <li v-for="(a,b,c) in object">
+            {{c}}. {{b}}:{{a}}
+        </li>
+    </ul>
+    <ul id="example-even">
+        <li v-for="n in evenNubmers">{{n}}</li>
+        <li v-for="n in even(numbers)">{{n}}</li>
+    </ul>
+    <div id="app">
+        <span v-for="n in 10">{{n}}</span>
+    </div>
+    <div id="todo-list-example">
+        <form @submit.prevent="addNewTodo">
+            <input v-model="newTodoText" id="new-todo" placeholder="E.g. Feed the cat">
+            <button>Add</button>
+        </form>
+        <ul>
+            <li is="todo-item" v-for="(todo,index) in todos" :key="todo.id" :title="todo.title" @remove="todos.splice(index,1)"></li>
+        </ul>
+    </div>
+    <script>
+        Vue.component('todo-item', {
+            template: '\
+            <li>\
+                {{title}}\
+                <button v-on:click="$emit(\'remove\')">Remove</button>\
+            </li>',
+            props: ['title']
+        })
+        new Vue({
+            el: '#todo-list-example',
+            data: {
+                newTodoText: '',
+                todos: [{
+                    id: 1,
+                    title: 'Do the dishes',
+                }, {
+                    id: 2,
+                    title: 'Take out the trash',
+                }, {
+                    id: 3,
+                    title: 'Mow the lawn'
+                }]
+            },
+            methods: {
+                addNewTodo: function() {
+                    this.todos.push({
+                        id: this.nextTodoId++,
+                        title: this.newTodoText
+                    })
+                    this.newTodoText = ''
+                }
+            }
+        })
+        new Vue({
+            el: "#app"
+        })
+        var exampleeven = new Vue({
+            el: '#example-even',
+            data: {
+                numbers: [1, 2, 3, 4, 5]
+            },
+            computed: {
+                evenNubmers: function() {
+                    return this.numbers.filter(function(number) {
+                        return number % 2 === 0
+                    })
+                }
+            },
+            methods: {
+                even: function(numbers) {
+                    return numbers.filter(function(number) {
+                        return number % 2 === 0
+                    })
+                }
+            }
+        })
+        var vforobject = new Vue({
+            el: '#v-for-object',
+            data: {
+                object: {
+                    firstName: 'John',
+                    lastname: 'Doe',
+                    age: 30
+                }
+            }
+        })
+        var example1 = new Vue({
+            el: '#example-1',
+            data: {
+                items: [{
+                    message: 'Foo'
+                }, {
+                    message: 'Bar'
+                }]
+            }
+        })
+        var example2 = new Vue({
+            el: '#example-2',
+            data: {
+                parentMessage: 'Parent',
+                items: [{
+                    message: 'Foo'
+                }, {
+                    message: 'Bar'
+                }]
+            }
+        })
+        var vm = new Vue({
+            data: {
+                userProfile: {
+                    name: 'Anika'
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
