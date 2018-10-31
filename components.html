@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="UTF-8">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>组件基础</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <!-- <button v-on:click="count++">You clicked me {{ count }} times.</button> -->
+        <button-counter></button-counter>
+        <button-counter></button-counter>
+        <button-counter></button-counter>
+        <div :style="{fontSize:postFontSize+'em'}">
+            <blog-post v-for="post in posts" v-bind:key="post.id" v-bind:post="post" @enlarg-text="onEnlargeText"></blog-post>
+        </div>
+        <custom-input v-model="searchText"></custom-input>
+        <span>searchText: {{ searchText }}</span>
+        <br>
+        <base-checkbox v-model="lovingVue"></base-checkbox>
+        <span>lovingVue: {{ lovingVue }}</span>
+        <br>
+        <base-input v-on:focus.native="onFocus"></base-input>
+        <br>
+        <todo-list v-bind:todos="todos">
+            <!-- 将 `slotProps` 定义为插槽作用域的名字 -->
+            <template slot-scope="slotProps">
+                    <!-- 为待办项自定义一个模板，-->
+                    <!-- 通过 `slotProps` 定制每个待办项。-->
+                    <span v-if="slotProps.todo.isComplete">✓</span>
+                    {{slotProps.todo.title}}
+            </template>
+        </todo-list>
+        <todo-list1 v-bind:todos="todos">
+        </todo-list1>
+    </div>
+    <script>
+        Vue.component('todo-list1', {
+            props: ['todos'],
+            template: `
+                <ul>
+                    <li v-for="todo in todos" v-bind:key="todo.id">
+                        <span v-if="todo.isComplete">✓</span>
+                        {{todo.title}}
+                    </li>
+                </ul>
+            `
+        })
+        Vue.component('todo-list', {
+            props: ['todos'],
+            template: '\
+                <ul>\
+                    <li v-for="todo in todos" v-bind:key="todo.id">\
+                        <slot v-bind:todo="todo">\
+                        </slot>\
+                    </li>\
+                </ul>\
+            '
+        })
+        Vue.component('base-input', {
+            inheritAttrs: false,
+            props: ['label', 'value'],
+            computed: {
+                inputListeners: function() {
+                    var vm = this
+                        // `Object.assign` 将所有的对象合并为一个新对象
+                    return Object.assign({},
+                        // 我们从父级添加所有的监听器
+                        this.$listeners, {
+                            input: function(event) {
+                                vm.$emit('input', event.target.value)
+                            }
+                        }
+                    )
+                }
+            },
+            template: '<label>\
+                        {{ label }}\
+                        <input\
+                            v-bind="$attrs"\
+                            v-bind:value="value"\
+                            v-on="inputListeners"\
+                        >\
+                        </label>'
+        })
+        Vue.component('base-checkbox', {
+            model: {
+                prop: 'checked',
+                event: 'change'
+            },
+            props: {
+                checked: Boolean
+            },
+            template: '<input \
+                        type="checkbox" \
+                        v-bind:checked="checked" \
+                        v-on:change="$emit(\'change\',$event.target.checked)">'
+        })
+        Vue.component('custom-input', {
+            props: ['value'],
+            template: '<input :value="value" @input="$emit(\'input\',$event.target.value)">'
+        })
+        Vue.component('blog-post', {
+            props: ['post'],
+            template: '<div class="blog-post">\
+                            <h3>{{ post.title }}</h3>\
+                            <button @click="$emit(\'enlarg-text\',0.2)">\
+                                放大字体\
+                            </button>\
+                            <div v-html="post.content"></div>\
+                        </div>'
+        })
+        Vue.component('button-counter', {
+            data: function() {
+                return {
+                    count: 0
+                }
+            },
+            template: '<button v-on:click="count++">You clicked me {{ count }} times.</button>'
+        })
+        new Vue({
+            el: "#app",
+            data: {
+                // count: 0
+                posts: [{
+                    id: 1,
+                    title: 'My journey with Vue',
+                    content: 'texttexttext11111'
+                }, {
+                    id: 2,
+                    title: 'Blogging with Vue',
+                    content: 'texttexttext222222222'
+                }, {
+                    id: 3,
+                    title: 'Why Vue is so fun',
+                    content: 'texttexttext33333333333'
+                }],
+                postFontSize: 1,
+                searchText: '',
+                lovingVue: false,
+                todos: [{
+                    id: 1,
+                    title: 'Do the dishes',
+                    isComplete: true
+                }, {
+                    id: 2,
+                    title: 'Take out the trash',
+                    isComplete: false
+                }, {
+                    id: 3,
+                    title: 'Mow the lawn',
+                    isComplete: true
+                }]
+            },
+            methods: {
+                onEnlargeText: function(amount) {
+                    this.postFontSize += amount
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="UTF-8">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>表单输入绑定</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <!--基础用法-->
+    <div id="app">
+        <input v-model="message" placeholder="编辑我">
+        <p>Message is:{{message}}</p>
+        <span>多行文本：</span>
+        <p style="white-space:pre-line;">{{message}}</p>
+        <br>
+        <textarea v-model="message" placeholder="添加多行文本">地方大幅度</textarea>
+        <input type="checkbox" id="checkbox" v-model="checked">
+        <label for="checkbox">{{checked}}</label>
+        <br>
+        <input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+        <label for="jack">Jack</label>
+        <input type="checkbox" id="john" value="John" v-model="checkedNames">
+        <label for="john">John</label>
+        <input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+        <label for="mike">Mike</label>
+        <br>
+        <span>选中的名字: {{ checkedNames }}</span>
+        <br>
+        <input type="radio" id="one" value="One" v-model="picked">
+        <label for="one">One</label>
+        <br>
+        <input type="radio" id="two" value="Two" v-model="picked">
+        <label for="two">Two</label>
+        <span>Picked: {{ picked }}</span>
+        <br>
+        <select v-model="selected">
+            <option v-for="option in options" v-bind:value="option.value">
+                {{option.text}}
+            </option>
+        </select>
+        <span>Selected: {{ selected }}</span>
+    </div>
+    <!--值绑定-->
+    <div id="app2">
+        <input type="checkbox" v-model="toggle" true-value="yes" false-value="no">
+        <input type="radio" v-model="pick" v-bind:value="a">
+    </div>
+    <script>
+        var vm = new Vue({
+            el: '#app2',
+            data: {
+                toggle: '',
+                pick: 1,
+                a: 2
+            }
+        })
+        new Vue({
+            el: "#app",
+            data: {
+                message: 'tttt',
+                checked: false,
+                checkedNames: [],
+                picked: '',
+                selected: '',
+                options: [{
+                    text: 'One',
+                    value: 'A'
+                }, {
+                    text: 'Two',
+                    value: 'B'
+                }, {
+                    text: 'Three',
+                    value: 'C'
+                }]
+            }
+        })
+    </script>
+</body>
+
+</html>
